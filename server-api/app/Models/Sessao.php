@@ -23,8 +23,7 @@ class Sessao extends Model
     protected $fillable = [
         'pauta_id',
         'data_inicio',
-        'duracao',
-        'status',
+        'data_final',
     ];
 
     /**
@@ -43,7 +42,7 @@ class Sessao extends Model
      */
     protected $casts = [
         'data_inicio' => 'datetime',
-        'status'      => 'boolean', // true = aberta, false = fechada
+        'data_final'  => 'datetime',
     ];
 
     /**
@@ -63,13 +62,8 @@ class Sessao extends Model
 
         // Definir o valor padrão para a duração (1 minuto) se não for informada.
         static::creating(function ($sessao) {
-            if (empty($sessao->duracao)) {
-                $sessao->duracao = 1;
-            }
             // Definir a data de início como o momento atual.
             $sessao->data_inicio = now();
-            // Definir o status como aberto por padrão.
-            $sessao->status = true;
         });
     }
 }

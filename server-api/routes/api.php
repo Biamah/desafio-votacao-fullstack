@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Route;
 
 // Rotas para a entidade Pauta
 Route::prefix('pautas')->group(function () {
-    Route::get('/', [PautaController::class, 'index']);          // Listar todas as pautas
-    Route::post('/', [PautaController::class, 'store']);         // Criar uma nova pauta
-    Route::get('/{id}', [PautaController::class, 'show']);       // Buscar uma pauta específica
-    Route::put('/{id}', [PautaController::class, 'update']);     // Atualizar uma pauta
-    Route::delete('/{id}', [PautaController::class, 'destroy']); // Deletar uma pauta
+    Route::get('/', [PautaController::class, 'index']);          
+    Route::post('/', [PautaController::class, 'store']);         
+    Route::get('/{id}', [PautaController::class, 'show']);       
+    Route::put('/{id}', [PautaController::class, 'update']);    
+    Route::delete('/{id}', [PautaController::class, 'destroy']); 
 });
 
 // Rotas para a entidade Sessao
 Route::prefix('sessoes')->group(function () {
-    Route::get('/', [SessaoController::class, 'index']);          // Listar todas as sessões
-    Route::post('/', [SessaoController::class, 'store']);         // Criar uma nova sessão
-    Route::get('/{id}', [SessaoController::class, 'show']);       // Buscar uma sessão específica
-    Route::put('/{id}', [SessaoController::class, 'update']);     // Atualizar uma sessão
-    Route::delete('/{id}', [SessaoController::class, 'destroy']); // Deletar uma sessão
+    Route::get('/', [SessaoController::class, 'index']);          
+    Route::post('/', [SessaoController::class, 'store']);         
+    Route::get('/{id}', [SessaoController::class, 'show']);       
+    Route::put('/{id}', [SessaoController::class, 'update']);     
+    Route::delete('/{id}', [SessaoController::class, 'destroy']); 
 });
