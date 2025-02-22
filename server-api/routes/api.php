@@ -3,6 +3,7 @@
 use App\Http\Controllers\PautaController;
 use App\Http\Controllers\SessaoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VotoController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('pautas')->group(function () {
@@ -27,4 +28,12 @@ Route::prefix('users')->group(function () {
     Route::get('/{id}', [UserController::class, 'show']);
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'destroy']);
+});
+
+Route::prefix('votos')->group(function () {
+    Route::get('/', [VotoController::class, 'index']);
+    Route::post('/', [VotoController::class, 'store']);
+    Route::get('/{id}', [VotoController::class, 'show']);
+    Route::put('/{id}', [VotoController::class, 'update']);
+    Route::delete('/{id}', [VotoController::class, 'destroy']);
 });
