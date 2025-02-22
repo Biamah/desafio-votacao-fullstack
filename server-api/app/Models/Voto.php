@@ -19,13 +19,9 @@ class Voto extends Model
         'voto',
     ];
 
-    /**
-     * Relacionamento com a tabela `sessoes`.
-     */
-    public function sessao()
-    {
-        return $this->belongsTo(Sessao::class);
-    }
+    protected $casts = [
+        'voto' => 'boolean',
+    ];
 
     /**
      * Relacionamento com a tabela `users`.
@@ -33,5 +29,13 @@ class Voto extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relacionamento com a tabela de sessões.
+     */
+    public function sessao()
+    {
+        return $this->belongsTo(Sessao::class);
     }
 }

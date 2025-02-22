@@ -36,4 +36,5 @@ Route::prefix('votos')->group(function () {
     Route::get('/{id}', [VotoController::class, 'show']);
     Route::put('/{id}', [VotoController::class, 'update']);
     Route::delete('/{id}', [VotoController::class, 'destroy']);
+    Route::get('/resultados-votacao', [VotoController::class, 'resultadosVotacao']);
 });

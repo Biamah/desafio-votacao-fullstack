@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('votos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sessao_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('voto', ['sim', 'nao']);
+            $table->foreignId('sessao_id')->constrained('sessoes')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->boolean('voto')->default(false);
             $table->timestamps();
         });
     }

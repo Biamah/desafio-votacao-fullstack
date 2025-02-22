@@ -42,7 +42,6 @@ class SessaoController extends Controller
                     'after_or_equal:' . now()->format('Y-m-d H:i:s'),
                 ],
                 'data_final'  => [
-                    'required',
                     'date_format:Y-m-d H:i:s',
                     'after:data_inicio',
                     'before_or_equal:' . $dataFinalMaxima->format('Y-m-d H:i:s'),

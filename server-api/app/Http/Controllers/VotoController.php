@@ -26,7 +26,7 @@ class VotoController extends Controller
         $validator = Validator::make($request->all(), [
             'sessao_id' => 'required|exists:sessoes,id',
             'user_id'   => 'required|exists:users,id',
-            'voto'      => 'required|in:sim,nao',
+            'voto'      => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -136,5 +136,35 @@ class VotoController extends Controller
         return response()->json([
             'message' => 'Voto deletado com sucesso',
         ], 204);
+    }
+
+    /**
+     * Retorna os resultados das votações por sessão.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resultadosVotacao()
+    {
+        // Recupera todas as sessões com votos
+        $sessoes = Sessao::with('voto')->get();
+
+        // Estrutura para armazenar o resultado
+        $resultado = [];
+
+        foreach ($sessoes as $sessao) {
+            // Filtra os votos "sim" e "não" para a sessão atual
+            $votosSim = $sessao->voto->where('voto', 'sim')->count();
+            $votosNao = $sessao->voto->where('voto', 'nao')->count();
+
+            // Adiciona ao resultado
+            $resultado[] = [
+                'id'  => $sessao->id,
+                'sim' => $votosSim,
+                'nao' => $votosNao,
+            ];
+        }
+
+        // Retorna o resultado no formato desejado
+        return response()->json(['sessoes' => $resultado]);
     }
 }

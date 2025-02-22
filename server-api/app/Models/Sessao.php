@@ -66,4 +66,12 @@ class Sessao extends Model
             $sessao->data_inicio = now();
         });
     }
+
+    /**
+     * Relacionamento com a tabela de votos.
+     */
+    public function votos()
+    {
+        return $this->hasMany(Voto::class);
+    }
 }
