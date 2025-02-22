@@ -70,6 +70,12 @@ class SessaoController extends Controller
                 ], 422);
             }
 
+            if (! $request->has('data_final')) {
+                $request->merge([
+                    'data_final' => $dataInicio->copy()->addMinutes(1)->format('Y-m-d H:i:s'),
+                ]);
+            }
+
             $conflict = Sessao::where('pauta_id', $request->pauta_id)
                 ->where(function ($query) use ($dataInicio, $request) {
                     $query->whereBetween('data_inicio', [$dataInicio, $request->data_final])
