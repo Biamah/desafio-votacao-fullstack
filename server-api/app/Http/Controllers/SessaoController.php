@@ -26,26 +26,26 @@ class SessaoController extends Controller
         try {
             if (! $request->has('data_inicio')) {
                 $request->merge([
-                    'data_inicio' => now()->format('Y-m-d H:i:s'),
+                    'data_inicio' => now()->format('Y-m-d H:i:00'),
                 ]);
             }
 
             $tempoMaximo     = '1 day';
-            $dataInicio      = Carbon::parse($request->data_inicio);
+            $dataInicio      = Carbon::parse($request->data_inicio)->startOfMinute();
             $dataFinalMaxima = $dataInicio->copy()->modify($tempoMaximo);
 
             $rules = [
                 'pauta_id'    => 'required|exists:pautas,id',
                 'data_inicio' => [
                     'required',
-                    'date_format:Y-m-d H:i:s',
-                    'after_or_equal:' . now()->format('Y-m-d H:i:s'),
+                    'date_format:Y-m-d H:i:00',
+                    'after_or_equal:' . now()->format('Y-m-d H:i:00'),
                 ],
                 'data_final'  => [
                     'date_format:Y-m-d H:i:s',
                     'after:data_inicio',
-                    'before_or_equal:' . $dataFinalMaxima->format('Y-m-d H:i:s'),
-                    'after_or_equal:' . now()->format('Y-m-d H:i:s'),
+                    'before_or_equal:' . $dataFinalMaxima->format('Y-m-d H:i:00'),
+                    'after_or_equal:' . now()->format('Y-m-d H:i:00'),
                 ],
             ];
 
