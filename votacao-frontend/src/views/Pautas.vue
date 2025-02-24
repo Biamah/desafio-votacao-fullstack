@@ -6,7 +6,7 @@
       <li v-for="pauta in pautas" :key="pauta.id" class="pauta-item">
         <div class="pauta-info">
           <h3>{{ pauta.nome }}</h3>
-          <p>{{ pauta.descricao }}</p>
+          <p><strong>Descrição:</strong> {{ pauta.descricao }}</p>
         </div>
       </li>
     </ul>
@@ -15,15 +15,15 @@
     <!-- Modal para criar nova pauta -->
     <div v-if="modalAberto" class="modal">
       <div class="modal-conteudo">
-        <h3>Criar Nova Pauta</h3>
-        <form @submit.prevent="criarPauta">
+        <h3>{{ editandoPauta ? 'Editar Pauta' : 'Criar Nova Pauta' }}</h3>
+        <form @submit.prevent="salvarPauta">
           <div class="form-group">
-            <label for="titulo">Título:</label>
-            <input v-model="novaPauta.nome" id="nome" type="text" required />
+            <label for="nome">Nome:</label>
+            <input v-model="pauta.nome" id="nome" type="text" required />
           </div>
           <div class="form-group">
             <label for="descricao">Descrição:</label>
-            <textarea v-model="novaPauta.descricao" id="descricao" required></textarea>
+            <textarea v-model="pauta.descricao" id="descricao" required></textarea>
           </div>
           <div class="form-botoes">
             <button type="button" @click="fecharModal" class="btn-cancelar">Cancelar</button>
@@ -39,23 +39,22 @@
 import axios from 'axios'
 
 export default {
-  name: 'PautasView',
+  name: 'PautaList',
   data() {
     return {
-      pautas: [], // Lista de pautas
-      modalAberto: false, // Controla a abertura do modal
-      novaPauta: {
+      pautas: [],
+      modalAberto: false,
+      editandoPauta: false,
+      pauta: {
         nome: '',
         descricao: '',
       },
     }
   },
   async created() {
-    // Busca a lista de pautas ao carregar o componente
     await this.carregarPautas()
   },
   methods: {
-    // Carrega as pautas do back-end
     async carregarPautas() {
       try {
         const response = await axios.get('http://localhost:8000/api/pautas')
@@ -64,32 +63,42 @@ export default {
         console.error('Erro ao carregar pautas:', error)
       }
     },
-    // Abre o modal para criar uma nova pauta
     abrirModalCriarPauta() {
+      this.editandoPauta = false
+      this.pauta = { nome: '', descricao: '' }
       this.modalAberto = true
     },
-    // Fecha o modal
+    abrirModalEditarPauta(pauta) {
+      this.editandoPauta = true
+      this.pauta = { ...pauta }
+      this.modalAberto = true
+    },
     fecharModal() {
       this.modalAberto = false
-      this.novaPauta = { nome: '', descricao: '' }
     },
-    // Cria uma nova pauta
-    async criarPauta() {
+    async salvarPauta() {
       try {
-        const response = await axios.post('http://localhost:8000/api/pautas', this.novaPauta)
-        this.pautas.push(response.data) // Adiciona a nova pauta à lista
-        this.fecharModal() // Fecha o modal
+        if (this.editandoPauta) {
+          await axios.put(`http://localhost:8000/api/pautas/${this.pauta.id}`, this.pauta)
+        } else {
+          await axios.post('http://localhost:8000/api/pautas', this.pauta)
+        }
+        await this.carregarPautas()
+        this.fecharModal()
+        alert('Pauta salva com sucesso!')
       } catch (error) {
-        console.error('Erro ao criar pauta:', error)
+        console.error('Erro ao salvar pauta:', error)
+        alert('Erro ao salvar pauta. Verifique o console para mais detalhes.')
       }
     },
-    // Exclui uma pauta
     async excluirPauta(id) {
       try {
         await axios.delete(`http://localhost:8000/api/pautas/${id}`)
-        this.pautas = this.pautas.filter((pauta) => pauta.id !== id) // Remove a pauta da lista
+        await this.carregarPautas()
+        alert('Pauta excluída com sucesso!')
       } catch (error) {
         console.error('Erro ao excluir pauta:', error)
+        alert('Erro ao excluir pauta. Verifique o console para mais detalhes.')
       }
     },
   },
@@ -122,16 +131,18 @@ export default {
 }
 
 .lista-pautas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
   list-style-type: none;
   padding: 0;
 }
 
 .pauta-item {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   padding: 15px;
-  margin-bottom: 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   transition: background 0.3s ease;
@@ -152,14 +163,26 @@ export default {
   color: rgba(255, 255, 255, 0.8);
 }
 
+.btn-editar,
 .btn-excluir {
   padding: 5px 10px;
-  background: #e74c3c;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease;
+}
+
+.btn-editar {
+  background: #f39c12;
+}
+
+.btn-editar:hover {
+  background: #e67e22;
+}
+
+.btn-excluir {
+  background: #e74c3c;
 }
 
 .btn-excluir:hover {
