@@ -101,7 +101,7 @@ git clone https://github.com/seu-usuario/seu-repositorio.git
 Navegue até o diretório do Backend:
 
 ```sh
-cd ../server-api
+cd server-api
 ```
 
 Instale as dependências do PHP usando o Composer:
@@ -141,7 +141,7 @@ O backend estará disponível em http://localhost:8000/
 Navegue até o diretório do front:
 
 ```sh
-cd ../votacao-frontend
+cd votacao-frontend
 ```
 
 Instale as dependências do Node.js usando npm:
@@ -150,7 +150,7 @@ Instale as dependências do Node.js usando npm:
 npm install
 ```
 
-O frontend estará disponível em http://localhost:8080/
+O frontend estará disponível em http://localhost:5173/
 
 ## Considerações finais
 
