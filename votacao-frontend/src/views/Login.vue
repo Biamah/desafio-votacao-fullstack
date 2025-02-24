@@ -37,7 +37,7 @@ export default {
   methods: {
     selecionarUsuario(usuario) {
       // Simula o "login" selecionando o usuário
-      localStorage.setItem('usuario', JSON.stringify(usuario)) // Salva o usuário no localStorage
+      localStorage.setItem('userId', usuario.id.toString()) // Salva o usuário no localStorage
       this.$router.push('/dashboard') // Redireciona para o dashboard
     },
   },
