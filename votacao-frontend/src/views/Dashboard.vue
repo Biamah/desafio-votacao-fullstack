@@ -1,11 +1,12 @@
 <template>
   <div class="dashboard-container">
-    <h1>Dashboard</h1>
-    <p v-if="usuario">Bem-vindo, {{ users.nome }}!</p>
+    <div class="dashboard-header">
+      <h1>Dashboard</h1>
+      <button @click="deslogar" class="btn-deslogar">Deslogar</button>
+    </div>
     <nav class="tab-nav">
       <router-link to="/dashboard/pautas" class="tab-link">Pautas</router-link>
       <router-link to="/dashboard/sessoes" class="tab-link">Sessões</router-link>
-      <router-link to="/dashboard/votos" class="tab-link">Votos</router-link>
     </nav>
     <div class="tab-content">
       <router-view />
@@ -14,8 +15,36 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'DashboardView',
+  data() {
+    return {
+      users: null, // Defina a propriedade users no data
+    }
+  },
+  async created() {
+    // Carregue os dados do usuário ao criar o componente
+    const userId = localStorage.getItem('userId')
+    if (userId) {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/users/${userId}`)
+        this.users = response.data
+      } catch (error) {
+        console.error('Erro ao carregar dados do usuário:', error)
+      }
+    }
+  },
+  methods: {
+    deslogar() {
+      // Limpa o localStorage
+      localStorage.removeItem('userId')
+
+      // Redireciona para a tela de login
+      this.$router.push('/')
+    },
+  },
 }
 </script>
 
@@ -30,8 +59,8 @@ export default {
 }
 
 h1 {
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 40px;
+  /* margin-bottom: 20px; */
   text-align: center;
 }
 
@@ -67,5 +96,32 @@ h1 {
   padding: 20px;
   background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
   border-radius: 8px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.btn-deslogar {
+  padding: 10px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.btn-deslogar:hover {
+  background-color: #c0392b;
 }
 </style>
