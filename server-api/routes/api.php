@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\PautaController;
 use App\Http\Controllers\ResultadoController;
 use App\Http\Controllers\SessaoController;
@@ -42,3 +43,5 @@ Route::prefix('votos')->group(function () {
 Route::prefix('resultados')->group(function () {
     Route::get('/{pauta_id}', [ResultadoController::class, 'calcularResultados']);
 });
+
+Route::get('/', [ApiController::class, 'index']);
