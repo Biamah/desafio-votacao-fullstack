@@ -152,6 +152,19 @@ npm install
 
 O frontend estará disponível em http://localhost:5173/
 
+### Rodando Tests
+
+Navegue até o diretório do Backend:
+
+```sh
+cd server-api
+```
+Execute o comando:
+
+```sh
+composer test
+```
+
 ## Considerações finais
 
 No backend dentro da pasta database/seeders eu deixei um arquivo de sql com usuários para poder testar a aplicação sem precisar cadastrar novos usuários.
