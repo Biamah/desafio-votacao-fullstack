@@ -1,4 +1,5 @@
 <?php
+namespace FeatureTestResultado;
 
 use App\Models\Pauta;
 use App\Models\Sessao;
@@ -6,13 +7,15 @@ use App\Models\User;
 use App\Models\Voto;
 use Carbon\Carbon;
 
-test('should search resultado', function () {
+function factoryCreate()
+{
     $dataPauta = [
         'nome'      => 'Criando uma pauta teste',
         'descricao' => 'loreloresloores',
     ];
 
-    $pauta       = Pauta::create($dataPauta);
+    $pauta = Pauta::create($dataPauta);
+
     $releaseDate = Carbon::now();
 
     $dataSessao = [
@@ -21,8 +24,7 @@ test('should search resultado', function () {
         'data_final'  => $releaseDate->addMinutes(1)->format('Y-m-d H:i:00'),
     ];
 
-    $sessao  = Sessao::create($dataSessao);
-    $sessoes = Sessao::where('pauta_id', $pauta->id)->get();
+    $sessao = Sessao::create($dataSessao);
 
     $dataUSers = [
         'name'     => 'Associado1',
@@ -40,27 +42,19 @@ test('should search resultado', function () {
 
     $voto = Voto::create($dataVoto);
 
-    $totalSim = 0;
-    $totalNao = 0;
+    return $pauta;
+}
 
-    foreach ($sessoes as $sessao) {
-        $totalSim += $sessao->votos->where('voto', true)->count();
-        $totalNao += $sessao->votos->where('voto', false)->count();
-    }
+test('should search resultado', function () {
+    $pauta = factoryCreate();
 
-    $resultado = [
-        'pauta_id'  => $pauta->id,
-        'total_sim' => $totalSim,
-        'total_nao' => $totalNao,
-    ];
-
-    $response = $this->getJson('/api/resultados/' . $pauta->id, $resultado);
+    $response = $this->get('/api/resultados/' . $pauta->id);
     $response
         ->assertStatus(200)
-        ->assertJsonStructure([
-            'pauta_id',
-            'total_sim',
-            'total_nao',
+        ->assertJson([
+            'pauta_id'  => $pauta->id,
+            'total_sim' => 1,
+            'total_nao' => 0,
         ]);
 });
 

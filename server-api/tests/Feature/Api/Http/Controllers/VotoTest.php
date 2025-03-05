@@ -1,4 +1,5 @@
 <?php
+namespace FeatureTestVoto;
 
 use App\Models\Pauta;
 use App\Models\Sessao;
@@ -8,19 +9,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Carbon\now;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-test('should search voto', function () {
-    $response = $this->get('/api/votos');
-
-    $response->assertOk();
-});
-
-test('should create voto', function () {
+function factoryCreate()
+{
     $dataPauta = [
         'nome'      => 'Criando uma pauta teste',
         'descricao' => 'loreloresloores',
     ];
 
-    $pauta       = Pauta::create($dataPauta);
+    $pauta = Pauta::create($dataPauta);
+
     $releaseDate = Carbon::now();
 
     $dataSessao = [
@@ -38,6 +35,18 @@ test('should create voto', function () {
     ];
 
     $user = User::create($dataUSers);
+
+    return [$pauta, $sessao, $user];
+}
+
+test('should search voto', function () {
+    $response = $this->get('/api/votos');
+
+    $response->assertOk();
+});
+
+test('should create voto', function () {
+    [$pauta, $sessao, $user] = factoryCreate();
 
     $voto = [
         'sessao_id' => $sessao->id,
@@ -67,29 +76,7 @@ test('should be an error when create voto', function () {
 });
 
 test('should be an error when create voto is not boolean', function () {
-    $dataPauta = [
-        'nome'      => 'Criando uma pauta teste',
-        'descricao' => 'loreloresloores',
-    ];
-
-    $pauta       = Pauta::create($dataPauta);
-    $releaseDate = Carbon::now();
-
-    $dataSessao = [
-        'pauta_id'    => $pauta->id,
-        'data_inicio' => $releaseDate->format('Y-m-d H:i:00'),
-        'data_final'  => $releaseDate->addMinutes(1)->format('Y-m-d H:i:00'),
-    ];
-
-    $sessao = Sessao::create($dataSessao);
-
-    $dataUSers = [
-        'name'     => 'Associado1',
-        'email'    => "associado@email.com",
-        'password' => '12345678',
-    ];
-
-    $user = User::create($dataUSers);
+    [$pauta, $sessao, $user] = factoryCreate();
 
     $voto = [
         'sessao_id' => $sessao->id,
@@ -108,29 +95,7 @@ test('should be an error when create voto is not boolean', function () {
 });
 
 test('should show voto_id', function () {
-    $dataPauta = [
-        'nome'      => 'Criando uma pauta teste',
-        'descricao' => 'loreloresloores',
-    ];
-
-    $pauta       = Pauta::create($dataPauta);
-    $releaseDate = Carbon::now();
-
-    $dataSessao = [
-        'pauta_id'    => $pauta->id,
-        'data_inicio' => $releaseDate->format('Y-m-d H:i:00'),
-        'data_final'  => $releaseDate->addMinutes(1)->format('Y-m-d H:i:00'),
-    ];
-
-    $sessao = Sessao::create($dataSessao);
-
-    $dataUSers = [
-        'name'     => 'Associado1',
-        'email'    => "associado@email.com",
-        'password' => '12345678',
-    ];
-
-    $user = User::create($dataUSers);
+    [$pauta, $sessao, $user] = factoryCreate();
 
     $dataVoto = [
         'sessao_id' => $sessao->id,
