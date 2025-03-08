@@ -5,39 +5,7 @@ use App\Models\Pauta;
 use App\Models\Sessao;
 use App\Models\User;
 use App\Models\Voto;
-use Carbon\Carbon;
-use Illuminate\Support\Carbon\now;
 use Illuminate\Testing\Fluent\AssertableJson;
-
-function factoryCreate()
-{
-    $dataPauta = [
-        'nome'      => 'Criando uma pauta teste',
-        'descricao' => 'loreloresloores',
-    ];
-
-    $pauta = Pauta::create($dataPauta);
-
-    $releaseDate = Carbon::now();
-
-    $dataSessao = [
-        'pauta_id'    => $pauta->id,
-        'data_inicio' => $releaseDate->format('Y-m-d H:i:00'),
-        'data_final'  => $releaseDate->addMinutes(1)->format('Y-m-d H:i:00'),
-    ];
-
-    $sessao = Sessao::create($dataSessao);
-
-    $dataUSers = [
-        'name'     => 'Associado1',
-        'email'    => "associado@email.com",
-        'password' => '12345678',
-    ];
-
-    $user = User::create($dataUSers);
-
-    return [$pauta, $sessao, $user];
-}
 
 test('should search voto', function () {
     $response = $this->get('/api/votos');
@@ -46,7 +14,9 @@ test('should search voto', function () {
 });
 
 test('should create voto', function () {
-    [$pauta, $sessao, $user] = factoryCreate();
+    $pauta = Pauta::factory()->create();
+    $sessao = Sessao::factory()->create(['pauta_id' => $pauta->id]);
+    $user = User::factory()->create();
 
     $voto = [
         'sessao_id' => $sessao->id,
@@ -76,7 +46,9 @@ test('should be an error when create voto', function () {
 });
 
 test('should be an error when create voto is not boolean', function () {
-    [$pauta, $sessao, $user] = factoryCreate();
+    $pauta = Pauta::factory()->create();
+    $sessao = Sessao::factory()->create(['pauta_id' => $pauta->id]);
+    $user = User::factory()->create();
 
     $voto = [
         'sessao_id' => $sessao->id,
@@ -95,7 +67,9 @@ test('should be an error when create voto is not boolean', function () {
 });
 
 test('should show voto_id', function () {
-    [$pauta, $sessao, $user] = factoryCreate();
+    $pauta = Pauta::factory()->create();
+    $sessao = Sessao::factory()->create(['pauta_id' => $pauta->id]);
+    $user = User::factory()->create();
 
     $dataVoto = [
         'sessao_id' => $sessao->id,

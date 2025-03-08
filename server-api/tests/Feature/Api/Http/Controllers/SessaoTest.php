@@ -7,18 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Carbon\now;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-function factoryCreate()
-{
-    $dataPauta = [
-        'nome'      => 'Criando uma pauta',
-        'descricao' => 'Lorem Ipsum',
-    ];
-
-    $pauta = Pauta::create($dataPauta);
-
-    return $pauta;
-}
-
 test('should search sessao', function () {
     $response = $this->get('/api/sessoes');
 
@@ -26,7 +14,7 @@ test('should search sessao', function () {
 });
 
 test('should create sessao', function () {
-    $pauta = factoryCreate();
+    $pauta = Pauta::factory()->create();
 
     $releaseDate = Carbon::now();
 
@@ -48,7 +36,7 @@ test('should create sessao', function () {
 });
 
 test('should be an error when create sessão', function () {
-    $pauta = factoryCreate();
+    $pauta = Pauta::factory()->create();
 
     $releaseDate = Carbon::now();
 
@@ -70,7 +58,7 @@ test('should be an error when create sessão', function () {
 });
 
 test('should show sessao-id', function () {
-    $pauta = factoryCreate();
+    $pauta = Pauta::factory()->create();
 
     $releaseDate = Carbon::now();
 
@@ -89,7 +77,7 @@ test('should show sessao-id', function () {
 });
 
 test('should update sessao', function () {
-    $pauta = factoryCreate();
+    $pauta = Pauta::factory()->create();
 
     $releaseDate = Carbon::now();
 
@@ -121,7 +109,7 @@ test('should update sessao', function () {
 });
 
 test('should delete sessao', function () {
-    $pauta = factoryCreate();
+    $pauta = Pauta::factory()->create();
 
     $releaseDate = Carbon::now();
 

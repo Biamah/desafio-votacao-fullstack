@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use Exception;  
 use App\Models\Pauta;
-use App\Models\Resultado;
 use App\Models\Sessao;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;  
 
 class ResultadoController extends Controller
 {
@@ -33,14 +35,6 @@ class ResultadoController extends Controller
                 $totalSim += $sessao->votos->where('voto', true)->count();
                 $totalNao += $sessao->votos->where('voto', false)->count();
             }
-
-            $resultado = Resultado::updateOrCreate(
-                ['pauta_id' => $pauta_id],
-                [
-                    'total_sim' => $totalSim,
-                    'total_nao' => $totalNao,
-                ]
-            );
 
             return response()->json([
                 'pauta_id'  => $pauta_id,
